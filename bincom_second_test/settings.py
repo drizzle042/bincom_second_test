@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 import environ
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+
+CRYPTOGRAPHIC_ALGORITHM = env('ALGORITHM')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', bool)
@@ -43,9 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main_app',
     'corsheaders',
-    'rest_framework'
+    'rest_framework',
+    'main_app',
+    'exceptions',
+    'custom_auth',
+    'repository',
+    'utils',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +65,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'exceptions.exception_handler.custom_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'custom_auth.authentication.CustomAuthentication',
+    ]
+}
 
 ROOT_URLCONF = 'bincom_second_test.urls'
 
